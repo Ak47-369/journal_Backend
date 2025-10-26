@@ -1,6 +1,7 @@
 package com.myjournal.journalApp.controller;
 
 import com.myjournal.journalApp.entity.JournalEntry;
+import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/_journal")
 public class JournalEntryController {
-    private HashMap<String, JournalEntry> journalEntries = new HashMap<>();
+    private HashMap<ObjectId, JournalEntry> journalEntries = new HashMap<>();
 
     @GetMapping("/get-all-entries") // It's path is /journal/get-all-entries
     public List<JournalEntry> getAll(){
@@ -28,7 +29,7 @@ public class JournalEntryController {
     }
 
     @PutMapping("update/id/{entryId}")
-    public JournalEntry updateEntryById(@PathVariable String entryId, @RequestBody JournalEntry entry){
+    public JournalEntry updateEntryById(@PathVariable ObjectId entryId, @RequestBody JournalEntry entry){
         return journalEntries.put(entryId,entry);
     }
 

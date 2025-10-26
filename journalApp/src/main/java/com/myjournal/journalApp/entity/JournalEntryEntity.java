@@ -1,5 +1,6 @@
 package com.myjournal.journalApp.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Document(collection = "journal_entries")
 public class JournalEntryEntity {
     @Id
-    private String id;
+    private ObjectId id;
     private String title;
     private String content;
     @CreatedDate
@@ -29,17 +30,17 @@ public class JournalEntryEntity {
         this.content = content;
     }
 
-    public JournalEntryEntity(String id, String content, String title) {
+    public JournalEntryEntity(ObjectId id, String content, String title) {
         this.id = id;
         this.title = title;
         this.content = content;
     }
 
-    public String getId(){
+    public ObjectId getId(){
         return id;
     }
 
-    public void setId(String id){
+    public void setId(ObjectId id){
         this.id = id;
     }
 

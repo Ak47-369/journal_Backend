@@ -1,8 +1,10 @@
 package com.myjournal.journalApp.entity;
 
+import org.bson.types.ObjectId;
+
 // POJO class - Plain Old Java Object
 public class JournalEntry {
-    private String id;
+    private ObjectId id;
     private String title;
     private String content;
 
@@ -11,7 +13,7 @@ public class JournalEntry {
 
     }
 
-    public JournalEntry(String id, String title, String content){
+    public JournalEntry(ObjectId id, String title, String content){
         this.content = content;
         this.id  = id;
         this.title = title;
@@ -22,11 +24,11 @@ public class JournalEntry {
         this.title = title;
     }
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
