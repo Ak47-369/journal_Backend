@@ -38,13 +38,15 @@ public class JournalEntryService {
         return null;
     }
 
-    public JournalEntry updateJournalEntryById(String id, JournalEntry journalEntry){
-        Optional<JournalEntryEntity> optionalJournalEntryEntity = journalEntryRepository.findById(id);
-        if(optionalJournalEntryEntity.isPresent()){
-            JournalEntryEntity journalEntryEntity = optionalJournalEntryEntity.get();
-            journalEntryEntity.setContent(journalEntry.getContent());
-            journalEntryEntity.setTitle(journalEntry.getTitle());
-            JournalEntryEntity savedEntry = journalEntryRepository.save(journalEntryEntity);
+    public JournalEntry updateJournalEntryById(String id, JournalEntry newJournalEntry){
+        JournalEntryEntity oldjournalEntryEntity = journalEntryRepository.findById(id).orElse(null);
+        if(oldjournalEntryEntity != null){
+            if(oldjournalEntryEntity.getContent() != null && !oldjournalEntryEntity.getContent().isEmpty())
+                oldjournalEntryEntity.setContent(newJournalEntry.getContent());
+
+            if(oldjournalEntryEntity.getTitle() != null && !oldjournalEntryEntity.getTitle().isEmpty())
+                oldjournalEntryEntity.setTitle(newJournalEntry.getTitle());
+            JournalEntryEntity savedEntry = journalEntryRepository.save(oldjournalEntryEntity);
             return new JournalEntry(savedEntry.getId(),savedEntry.getTitle(), savedEntry.getContent());
         }
         return null;
