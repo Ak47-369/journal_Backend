@@ -24,12 +24,12 @@ public class JournalEntryService {
 
     public JournalEntry saveEntry(JournalEntry journalEntry){
         // Convert Journal Entry POJO/DTO to JournalEntry Entity
-        JournalEntryEntity journalEntryEntity = new JournalEntryEntity(journalEntry.getId(),journalEntry.getContent(), journalEntry.getTitle());
+        JournalEntryEntity journalEntryEntity = new JournalEntryEntity(journalEntry.getContent(), journalEntry.getTitle());
         JournalEntryEntity savedEntry = journalEntryRepository.save(journalEntryEntity);
         return new JournalEntry(savedEntry.getId(), savedEntry.getTitle(), savedEntry.getContent());
     }
 
-    public JournalEntry getJournalEntryById(Long id){
+    public JournalEntry getJournalEntryById(String id){
         Optional<JournalEntryEntity>  optionalJournalEntryEntity = journalEntryRepository.findById(id);
         if(optionalJournalEntryEntity.isPresent()){
             JournalEntryEntity journalEntryEntity = optionalJournalEntryEntity.get();
@@ -38,7 +38,7 @@ public class JournalEntryService {
         return null;
     }
 
-    public JournalEntry updateJournalEntryById(Long id, JournalEntry journalEntry){
+    public JournalEntry updateJournalEntryById(String id, JournalEntry journalEntry){
         Optional<JournalEntryEntity> optionalJournalEntryEntity = journalEntryRepository.findById(id);
         if(optionalJournalEntryEntity.isPresent()){
             JournalEntryEntity journalEntryEntity = optionalJournalEntryEntity.get();
@@ -50,7 +50,7 @@ public class JournalEntryService {
         return null;
     }
 
-    public void deleteJournalEntryById(Long id){
+    public void deleteJournalEntryById(String id){
         Optional<JournalEntryEntity> optionalJournalEntryEntity = journalEntryRepository.findById(id);
         if(optionalJournalEntryEntity.isPresent()) {
             journalEntryRepository.deleteById(id);

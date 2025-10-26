@@ -2,7 +2,7 @@ package com.myjournal.journalApp.entity;
 
 // POJO class - Plain Old Java Object
 public class JournalEntry {
-    private long id;
+    private String id;
     private String title;
     private String content;
 
@@ -11,7 +11,7 @@ public class JournalEntry {
 
     }
 
-    public JournalEntry(long id, String title, String content){
+    public JournalEntry(String id, String title, String content){
         this.content = content;
         this.id  = id;
         this.title = title;
@@ -22,11 +22,11 @@ public class JournalEntry {
         this.title = title;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

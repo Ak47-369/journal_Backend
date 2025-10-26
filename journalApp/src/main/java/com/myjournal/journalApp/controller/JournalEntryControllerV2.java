@@ -22,17 +22,17 @@ public class JournalEntryControllerV2 {
     }
 
     @GetMapping("get/id/{entryId}")
-    public JournalEntry getEntryById(@PathVariable("entryId") long id){
+    public JournalEntry getEntryById(@PathVariable("entryId") String id){
         return journalEntryService.getJournalEntryById(id);
     }
 
     @DeleteMapping("delete/id/{entryId}")
-    public void deleteEntryById(@PathVariable long entryId){
+    public void deleteEntryById(@PathVariable String entryId){
         journalEntryService.deleteJournalEntryById(entryId);
     }
 
     @PutMapping("update/id/{entryId}")
-    public JournalEntry updateEntryById(@PathVariable long entryId, @RequestBody JournalEntry entry){
+    public JournalEntry updateEntryById(@PathVariable String entryId, @RequestBody JournalEntry entry){
         return journalEntryService.updateJournalEntryById(entryId, entry);
     }
 

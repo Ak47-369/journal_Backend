@@ -1,28 +1,45 @@
 package com.myjournal.journalApp.entity;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.annotation.processing.Generated;
+import java.time.LocalDateTime;
 
-@Document
+@Document(collection = "journal_entries")
 public class JournalEntryEntity {
     @Id
-    private Long id;
+    private String id;
     private String title;
     private String content;
+    @CreatedDate
+    private LocalDateTime createdAt;
 
-    public JournalEntryEntity(Long id, String content, String title) {
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    // Similar to Jackson, Entity also need default constructor for creating object from database data
+    public JournalEntryEntity(){
+
+    }
+
+    public JournalEntryEntity(String content, String title) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public JournalEntryEntity(String id, String content, String title) {
         this.id = id;
         this.title = title;
         this.content = content;
     }
 
-    public Long getId(){
+    public String getId(){
         return id;
     }
 
-    public void setId(Long id){
+    public void setId(String id){
         this.id = id;
     }
 
@@ -40,5 +57,21 @@ public class JournalEntryEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
