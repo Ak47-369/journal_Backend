@@ -1,11 +1,12 @@
 package com.myjournal.journalApp.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import org.bson.types.ObjectId;
 
 // POJO class - Plain Old Java Object
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class JournalEntry {
     private ObjectId id;
