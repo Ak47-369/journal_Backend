@@ -1,5 +1,6 @@
 package com.myjournal.journalApp.entity;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 public class JournalEntryEntity {
     @Id
     private ObjectId id;
-    @NonNull
+    @NotBlank
     private String title;
     private String content;
     @CreatedDate
@@ -25,7 +26,7 @@ public class JournalEntryEntity {
     private LocalDateTime updatedAt;
 
 //    // Similar to Jackson, Entity also need default constructor for creating object from database data
-    public JournalEntryEntity(String content, String title) {
+    public JournalEntryEntity(String content, @NotBlank String title) {
         this.title = title;
         this.content = content;
     }
