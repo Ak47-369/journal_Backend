@@ -1,6 +1,6 @@
 package com.myjournal.journalApp.service;
 
-import com.myjournal.journalApp.entity.JournalEntry;
+import com.myjournal.journalApp.dto.JournalEntry;
 import com.myjournal.journalApp.entity.JournalEntryEntity;
 import com.myjournal.journalApp.repository.JournalEntryRepository;
 import org.springframework.stereotype.Service;

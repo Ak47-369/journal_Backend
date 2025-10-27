@@ -1,7 +1,6 @@
 package com.myjournal.journalApp.controller;
 
-import com.myjournal.journalApp.entity.JournalEntry;
-import com.myjournal.journalApp.entity.JournalEntryEntity;
+import com.myjournal.journalApp.dto.JournalEntry;
 import com.myjournal.journalApp.service.JournalEntryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
