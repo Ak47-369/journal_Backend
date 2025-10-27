@@ -57,6 +57,5 @@ public class JournalEntryService {
         if(optionalJournalEntryEntity.isPresent()) {
             journalEntryRepository.deleteById(id);
         }
-//        System.out.println("Record with Id: " + id + " not present");
     }
 }
