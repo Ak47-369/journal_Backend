@@ -23,7 +23,12 @@ public class JournalEntryService {
     }
 
     public List<JournalEntry> getAllEntries(User user){
-        return user.getJournalEntryIds().stream().map(journalEntryId -> getJournalEntryById(journalEntryId)).toList();
+        // Get list of All ID we need
+        List<ObjectId> journalEntryIds = user.getJournalEntryIds();
+        // Make one Trip to Database to get All Entries
+        List<JournalEntryEntity> journalEntries = journalEntryRepository.findAllById(journalEntryIds);
+        // Now , in memory (extermely fast(, convert entities to DTOs
+        return journalEntries.stream().map(entity -> new JournalEntry(entity.getId(), entity.getTitle(), entity.getContent())).toList();
     }
 
     public JournalEntry saveEntry(User user, JournalEntry journalEntry){
