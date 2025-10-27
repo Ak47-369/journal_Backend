@@ -53,6 +53,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByUserName(userName);
         if(optionalUser.isPresent()){
             User oldUser = optionalUser.get();
+            oldUser.setUserName(userDTO.getUserName());
             oldUser.setPassword(userDTO.getPassword());
             User savedUser = userRepository.save(oldUser);
             return new UserDTO(savedUser.getId(), savedUser.getUserName());
