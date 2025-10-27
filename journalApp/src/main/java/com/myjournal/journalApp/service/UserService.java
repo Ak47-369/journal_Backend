@@ -1,5 +1,6 @@
 package com.myjournal.journalApp.service;
 
+import com.myjournal.journalApp.dto.JournalEntry;
 import com.myjournal.journalApp.dto.UserDTO;
 import com.myjournal.journalApp.entity.User;
 import com.myjournal.journalApp.repository.UserRepository;
@@ -62,10 +63,7 @@ public class UserService {
     }
 
     public void deleteUserById(ObjectId id){
-        Optional<User> optionalUserId = userRepository.findById(id);
-        if(optionalUserId.isPresent()) {
-            userRepository.deleteById(id);
-        }
+        userRepository.deleteById(id);
     }
 
     public List<UserDTO> findAllUsers(){
