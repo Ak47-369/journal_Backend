@@ -22,8 +22,7 @@ public class User {
     @Indexed(unique = true) // Unique Username
     @NonNull // Username can't be null, if it's null NullPointerException is Thrown
     private String userName;
-    @DBRef // Link collections journal_entries and users, Instead of embedding store reference
-    private List<JournalEntry> journalEntries = new ArrayList<>();
+    private List<ObjectId> journalEntryIds = new ArrayList<>();
     @NonNull
     private String password;
 
