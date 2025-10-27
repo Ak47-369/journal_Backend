@@ -16,12 +16,10 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final JournalEntryRepository journalEntryRepository;
     private final JournalEntryService journalEntryService;
 
-    public UserService(UserRepository userRepository, JournalEntryRepository journalEntryRepository, JournalEntryService journalEntryService){
+    public UserService(UserRepository userRepository, JournalEntryService journalEntryService){
         this.userRepository = userRepository;
-        this.journalEntryRepository = journalEntryRepository;
         this.journalEntryService = journalEntryService;
     }
 
@@ -31,70 +29,19 @@ public class UserService {
         return allEntries;
     }
 
-    public List<JournalEntry> getAllEntries(String userName){
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
-        if(optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            return journalEntryRepository.findAllById(user.getJournalEntryIds()).stream().map(journalEntryEntity -> new JournalEntry(
-                    journalEntryEntity.getId(),
-                    journalEntryEntity.getTitle(),
-                    journalEntryEntity.getContent()
-            )).toList();
-        }
-        return null;
+    public boolean hasJournalEntryWithId(User user,ObjectId id){
+        return user.getJournalEntryIds().contains(id);
     }
 
-    public JournalEntry getJournalEntryById(String userName, ObjectId id){
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            List<ObjectId> journalEntryIds = user.getJournalEntryIds();
-            for(ObjectId objectId : journalEntryIds) {
-                if (objectId.equals(id)){
-                    return journalEntryService.getJournalEntryById(id);
-                }
-            }
-            return null;
-        }
-        return null;
+    public void deleteJournalEntryById(User user,ObjectId id){
+        user.getJournalEntryIds().remove(id);
+        userRepository.save(user);
+        journalEntryService.deleteJournalEntryById(id);
     }
 
-    public void deleteJournalEntryById(String userName,ObjectId id){
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            List<ObjectId> journalEntryIds = user.getJournalEntryIds();
-            for(ObjectId objectId : journalEntryIds) {
-                if (objectId.equals(id)){
-                    journalEntryService.deleteJournalEntryById(id);
-                    return;
-                }
-            }
-        }
-    }
-
-    public JournalEntry updateJournalEntryById(String userName, ObjectId id, JournalEntry newJournalEntry){
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            List<ObjectId> journalEntryIds = user.getJournalEntryIds();
-            for(ObjectId objectId1 : journalEntryIds) {
-                if (objectId1.equals(id)) {
-                    return journalEntryService.updateJournalEntryById(id, newJournalEntry);
-                }
-            }
-            return null;
-        }
-        return  null;
-    }
-
-    public JournalEntry createEntry(String userName, JournalEntry entry){
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            return journalEntryService.saveEntry(user,entry);
-        }
-        return null;
+    public JournalEntry updateJournalEntryById(User user, ObjectId id, JournalEntry newJournalEntry){
+        List<ObjectId> journalEntryIds = user.getJournalEntryIds();
+        return journalEntryService.updateJournalEntryById(id,newJournalEntry);
     }
 
     public UserDTO createUser(UserDTO userDTO){
@@ -141,6 +88,10 @@ public class UserService {
 
     public List<UserDTO> findAllUsers(){
         return userRepository.findAll().stream().map(user -> new UserDTO(user.getId(),user.getUserName())).toList();
+    }
+
+    public User findByUserName(String userName){
+        return userRepository.findByUserName(userName).orElse(null);
     }
 
 }

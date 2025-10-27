@@ -22,10 +22,8 @@ public class JournalEntryService {
         this.userRepositry = userRepositry;
     }
 
-    public List<JournalEntry> getAllEntries(){
-        List<JournalEntry> allEntries;
-        allEntries = journalEntryRepository.findAll().stream().map(journalEntryEntity -> new JournalEntry(journalEntryEntity.getId(),journalEntryEntity.getContent(), journalEntryEntity.getTitle())).toList();
-        return allEntries;
+    public List<JournalEntry> getAllEntries(User user){
+        return user.getJournalEntryIds().stream().map(journalEntryId -> getJournalEntryById(journalEntryId)).toList();
     }
 
     public JournalEntry saveEntry(User user, JournalEntry journalEntry){
