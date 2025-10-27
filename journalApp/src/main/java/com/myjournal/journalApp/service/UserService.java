@@ -39,11 +39,6 @@ public class UserService {
         journalEntryService.deleteJournalEntryById(id);
     }
 
-    public JournalEntry updateJournalEntryById(User user, ObjectId id, JournalEntry newJournalEntry){
-        List<ObjectId> journalEntryIds = user.getJournalEntryIds();
-        return journalEntryService.updateJournalEntryById(id,newJournalEntry);
-    }
-
     public UserDTO createUser(UserDTO userDTO){
         User user = new User(userDTO.getUserName(), userDTO.getPassword());
         User savedEntry = userRepository.save(user);

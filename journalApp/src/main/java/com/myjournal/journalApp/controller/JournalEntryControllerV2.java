@@ -63,7 +63,7 @@ public class JournalEntryControllerV2 {
         if(user == null || !userService.hasJournalEntryWithId(user,entryId))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        JournalEntry updatedJournalEntry = userService.updateJournalEntryById(user,entryId, entry);
+        JournalEntry updatedJournalEntry = journalEntryService.updateJournalEntryById(entryId, entry);
         if(updatedJournalEntry != null)
             return new ResponseEntity<>(updatedJournalEntry, HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
