@@ -40,9 +40,9 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/update")
-    public  ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO){
-        UserDTO updatedUser = userService.updateUser(userDTO);
+    @PutMapping("/update/{userName}")
+    public  ResponseEntity<UserDTO> updateUser(@PathVariable String userName ,@RequestBody UserDTO userDTO){
+        UserDTO updatedUser = userService.updateUser(userName,userDTO);
         if(updatedUser != null)
             return new ResponseEntity<>(updatedUser,HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
