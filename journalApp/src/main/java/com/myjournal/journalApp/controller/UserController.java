@@ -2,7 +2,6 @@ package com.myjournal.journalApp.controller;
 
 import com.myjournal.journalApp.dto.CreateUserRequest;
 import com.myjournal.journalApp.dto.UserResponse;
-import com.myjournal.journalApp.entity.User;
 import com.myjournal.journalApp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
