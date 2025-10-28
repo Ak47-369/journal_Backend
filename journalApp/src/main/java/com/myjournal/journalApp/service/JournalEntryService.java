@@ -7,6 +7,7 @@ import com.myjournal.journalApp.repository.JournalEntryRepository;
 import com.myjournal.journalApp.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class JournalEntryService {
         return journalEntries.stream().map(entity -> new JournalEntry(entity.getId(), entity.getTitle(), entity.getContent())).toList();
     }
 
+    @Transactional
     public JournalEntry saveEntry(User user, JournalEntry journalEntry){
         JournalEntryEntity journalEntryEntity = new JournalEntryEntity(journalEntry.getContent(), journalEntry.getTitle());
         JournalEntryEntity savedEntry = journalEntryRepository.save(journalEntryEntity);
@@ -48,6 +50,7 @@ public class JournalEntryService {
         return null;
     }
 
+    @Transactional
     public JournalEntry updateJournalEntryById(ObjectId id, JournalEntry newJournalEntry){
         JournalEntryEntity oldjournalEntryEntity = journalEntryRepository.findById(id).orElse(null);
         if(oldjournalEntryEntity != null){
