@@ -11,55 +11,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/api/v1/users") // More RESTful path
 @AllArgsConstructor
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("/create-user")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
-        if(createdUser != null)
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get/id/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable ObjectId id){
-       UserDTO userDTO = userService.getUserById(id);
-       if(userDTO != null)
-           return new ResponseEntity<>(userDTO, HttpStatus.OK);
-       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable ObjectId id) {
+        UserDTO userDTO = userService.getUserById(id);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/update/id/{id}")
-    public  ResponseEntity<UserDTO> updateUserById(@PathVariable ObjectId id, @RequestBody UserDTO userDTO){
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUserById(@PathVariable ObjectId id, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUserById(id, userDTO);
-        if(updatedUser != null)
-            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @PutMapping("/update/{userName}")
-    public  ResponseEntity<UserDTO> updateUser(@PathVariable String userName ,@RequestBody UserDTO userDTO){
-        UserDTO updatedUser = userService.updateUser(userName,userDTO);
-        if(updatedUser != null)
-            return new ResponseEntity<>(updatedUser,HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @DeleteMapping("/delete/id/{id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable ObjectId id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable ObjectId id) {
         userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 
-    @GetMapping("/get-all-users")
-    public ResponseEntity<List<UserDTO>> getAllUsers(){
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> allUsers = userService.findAllUsers();
-        if(allUsers != null && !allUsers.isEmpty())
-            return new ResponseEntity<>(allUsers, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 }
