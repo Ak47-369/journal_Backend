@@ -25,6 +25,7 @@ public class User {
     private List<ObjectId> journalEntryIds = new ArrayList<>();
     @NonNull
     private String password;
+    private List<String> roles;
 
     public User(@NonNull String userName, @NonNull String password) {
         this.userName = userName;
