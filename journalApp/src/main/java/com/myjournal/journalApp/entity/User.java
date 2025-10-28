@@ -1,17 +1,17 @@
 package com.myjournal.journalApp.entity;
 
-import com.myjournal.journalApp.dto.JournalEntry;
+import com.myjournal.journalApp.enums.Roles;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Document(collection = "users")
 @Data
@@ -25,10 +25,13 @@ public class User {
     private List<ObjectId> journalEntryIds = new ArrayList<>();
     @NonNull
     private String password;
-    private List<String> roles;
+
+    // Use Set<Role> for roles to ensure uniqueness and type safety
+    private Set<Roles> roles = new java.util.HashSet<>(); // Initialize to avoid NullPointerException
 
     public User(@NonNull String userName, @NonNull String password) {
         this.userName = userName;
         this.password = password;
+        this.roles.add(Roles.USER); // Default role for new users
     }
 }
