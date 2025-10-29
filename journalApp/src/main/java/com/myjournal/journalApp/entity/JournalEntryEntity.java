@@ -25,7 +25,7 @@ public class JournalEntryEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-//    // Similar to Jackson, Entity also need default constructor for creating object from database data
+ // Similar to Jackson, Entity also need default constructor for creating object from database data
     public JournalEntryEntity(String content, @NotBlank String title) {
         this.title = title;
         this.content = content;
