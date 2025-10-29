@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Document(collection = "users")
 @Data
@@ -25,9 +24,7 @@ public class User {
     private List<ObjectId> journalEntryIds = new ArrayList<>();
     @NonNull
     private String password;
-
-    // Use Set<Role> for roles to ensure uniqueness and type safety
-    private Set<Roles> roles = new java.util.HashSet<>(); // Initialize to avoid NullPointerException
+    private List<Roles> roles = new ArrayList<>(); // Initialize to avoid NullPointerException
 
     public User(@NonNull String userName, @NonNull String password) {
         this.userName = userName;

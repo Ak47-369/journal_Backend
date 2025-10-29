@@ -3,6 +3,7 @@ package com.myjournal.journalApp.service;
 import com.myjournal.journalApp.dto.CreateUserRequest;
 import com.myjournal.journalApp.dto.UserResponse;
 import com.myjournal.journalApp.entity.User;
+import com.myjournal.journalApp.enums.Roles;
 import com.myjournal.journalApp.exception.ResourceNotFoundException;
 import com.myjournal.journalApp.repository.UserRepository;
 import org.bson.types.ObjectId;
@@ -24,7 +25,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<UserResponse> findAllUsers() { // Renamed from getAllUsers for clarity
+    public List<UserResponse> findAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> new UserResponse(user.getId(), user.getUserName()))
                 .toList();
@@ -47,6 +48,19 @@ public class UserService {
         });
 
         User user = new User(createUserRequest.getUserName(), passwordEncoder.encode(createUserRequest.getPassword()));
+        User savedUser = userRepository.save(user);
+        return new UserResponse(savedUser.getId(), savedUser.getUserName());
+    }
+
+    public UserResponse createAdminUser(CreateUserRequest createUserRequest){
+        userRepository.findByUserName(createUserRequest.getUserName()).ifPresent(user -> {
+            throw new IllegalStateException(String.format("User with username '%s' already exists.", createUserRequest.getUserName()));
+        });
+
+        User user = new User(createUserRequest.getUserName(), passwordEncoder.encode(createUserRequest.getPassword()));
+        if (createUserRequest.getRole() != null && !createUserRequest.getRole().isEmpty()) {
+            user.getRoles().add(Roles.valueOf(createUserRequest.getRole()));
+        }
         User savedUser = userRepository.save(user);
         return new UserResponse(savedUser.getId(), savedUser.getUserName());
     }
