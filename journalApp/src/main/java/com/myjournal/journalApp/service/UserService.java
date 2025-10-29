@@ -61,6 +61,9 @@ public class UserService {
         if (createUserRequest.getUserName() != null && !createUserRequest.getUserName().isEmpty()) {
             oldUser.setUserName(createUserRequest.getUserName());
         }
+        if (createUserRequest.getPassword() != null && !createUserRequest.getPassword().isEmpty()){
+            oldUser.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
+        }
         User savedUser = userRepository.save(oldUser);
         return new UserResponse(savedUser.getId(), savedUser.getUserName());
     }
