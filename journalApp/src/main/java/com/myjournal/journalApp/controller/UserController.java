@@ -43,13 +43,14 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteUserById(@PathVariable ObjectId id) {
+    public ResponseEntity<?> deleteUserById() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName(); // Extracting userName from Authentication
         userService.deleteUserById(userService.getUserIdByName(userName));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // To DO - Only ADMIN should be able to access this endpoint
     @GetMapping("/all")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<UserResponse> allUsers = userService.findAllUsers();
