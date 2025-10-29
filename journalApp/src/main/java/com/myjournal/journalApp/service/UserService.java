@@ -24,7 +24,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<UserResponse> getAllUsers() {
+    public List<UserResponse> findAllUsers() { // Renamed from getAllUsers for clarity
         return userRepository.findAll().stream()
                 .map(user -> new UserResponse(user.getId(), user.getUserName()))
                 .toList();
@@ -41,6 +41,11 @@ public class UserService {
     }
 
     public UserResponse createUser(CreateUserRequest createUserRequest) {
+        // Check if username already exists
+        userRepository.findByUserName(createUserRequest.getUserName()).ifPresent(user -> {
+            throw new IllegalStateException(String.format("User with username '%s' already exists.", createUserRequest.getUserName()));
+        });
+
         User user = new User(createUserRequest.getUserName(), passwordEncoder.encode(createUserRequest.getPassword()));
         User savedUser = userRepository.save(user);
         return new UserResponse(savedUser.getId(), savedUser.getUserName());
@@ -64,10 +69,15 @@ public class UserService {
         if (!userRepository.existsById(id)) {
             throw new ResourceNotFoundException("User", "id", id);
         }
+        // To DO - Delete journal entries also
         userRepository.deleteById(id);
     }
 
     public User findByUserName(String userName) {
         return userRepository.findByUserName(userName).orElseThrow(() -> new ResourceNotFoundException("User", "userName", userName));
+    }
+
+    public ObjectId getUserIdByName(String userName){
+        return userRepository.findByUserName(userName).orElseThrow( () -> new ResourceNotFoundException("User", "userName", userName)).getId();
     }
 }

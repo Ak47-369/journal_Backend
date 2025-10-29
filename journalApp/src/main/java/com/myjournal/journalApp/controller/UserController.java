@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,27 +26,33 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable ObjectId id) {
-        UserResponse userResponse = userService.getUserById(id);
+    @GetMapping
+    public ResponseEntity<UserResponse> getUserById() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName(); // Extracting userName from Authentication
+        UserResponse userResponse = userService.getUserById(userService.getUserIdByName(userName));
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUserById(@PathVariable ObjectId id, @Valid @RequestBody CreateUserRequest createUserRequest ) {
-        UserResponse updatedUser = userService.updateUserById(id, createUserRequest);
+    @PutMapping
+    public ResponseEntity<UserResponse> updateUserById( @Valid @RequestBody CreateUserRequest createUserRequest ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName(); // Extracting userName from Authentication
+        UserResponse updatedUser = userService.updateUserById(userService.getUserIdByName(userName), createUserRequest);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     public ResponseEntity<?> deleteUserById(@PathVariable ObjectId id) {
-        userService.deleteUserById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName(); // Extracting userName from Authentication
+        userService.deleteUserById(userService.getUserIdByName(userName));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> allUsers = userService.getAllUsers();
+        List<UserResponse> allUsers = userService.findAllUsers();
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 }
