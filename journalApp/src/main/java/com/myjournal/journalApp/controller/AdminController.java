@@ -3,7 +3,6 @@ package com.myjournal.journalApp.controller;
 import com.myjournal.journalApp.dto.CreateUserRequest;
 import com.myjournal.journalApp.dto.UserResponse;
 import com.myjournal.journalApp.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -5,11 +5,10 @@ import com.myjournal.journalApp.dto.UserResponse;
 import com.myjournal.journalApp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,33 +26,23 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> getUserById() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName(); // Extracting userName from Authentication
+    public ResponseEntity<UserResponse> getUserById(@AuthenticationPrincipal UserDetails userDetails) {
+        String userName = userDetails.getUsername(); // Extracting userName from userDetails
         UserResponse userResponse = userService.getUserById(userService.getUserIdByName(userName));
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<UserResponse> updateUserById( @Valid @RequestBody CreateUserRequest createUserRequest ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName(); // Extracting userName from Authentication
+    public ResponseEntity<UserResponse> updateUserById( @AuthenticationPrincipal UserDetails userDetails, @Valid @RequestBody CreateUserRequest createUserRequest ) {
+        String userName = userDetails.getUsername();
         UserResponse updatedUser = userService.updateUserById(userService.getUserIdByName(userName), createUserRequest);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteUserById() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName(); // Extracting userName from Authentication
+    public ResponseEntity<?> deleteUserById(@AuthenticationPrincipal UserDetails userDetails) {
+        String userName = userDetails.getUsername();
         userService.deleteUserById(userService.getUserIdByName(userName));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    // To DO - Only ADMIN should be able to access this endpoint
-    @GetMapping("/all")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> allUsers = userService.findAllUsers();
-        return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 }

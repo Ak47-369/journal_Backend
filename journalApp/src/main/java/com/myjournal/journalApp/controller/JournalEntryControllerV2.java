@@ -7,9 +7,8 @@ import com.myjournal.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,18 +25,16 @@ public class JournalEntryControllerV2 {
     }
 
     @GetMapping
-    public ResponseEntity<List<JournalEntry>> getAllEntries() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName(); // Extracting userName from Authentication
+    public ResponseEntity<List<JournalEntry>> getAllEntries(@AuthenticationPrincipal UserDetails userDetails) {
+        String userName = userDetails.getUsername();
         User user = userService.findByUserName(userName);
         List<JournalEntry> allEntries = journalEntryService.getAllEntries(user);
         return new ResponseEntity<>(allEntries, HttpStatus.OK); // Always return 200 OK, even for an empty list
     }
 
     @GetMapping("{entryId}")
-    public ResponseEntity<JournalEntry> getEntryById(@PathVariable ObjectId entryId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
+    public ResponseEntity<JournalEntry> getEntryById(@AuthenticationPrincipal UserDetails userDetails, @PathVariable ObjectId entryId) {
+        String userName = userDetails.getUsername();
         User user = userService.findByUserName(userName);
         // Ensure the entry belongs to the user
         if (!userService.hasJournalEntryWithId(user, entryId)) {
@@ -48,9 +45,8 @@ public class JournalEntryControllerV2 {
     }
 
     @DeleteMapping("{entryId}")
-    public ResponseEntity<?> deleteEntryById( @PathVariable ObjectId entryId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
+    public ResponseEntity<?> deleteEntryById(@AuthenticationPrincipal UserDetails userDetails, @PathVariable ObjectId entryId) {
+        String userName = userDetails.getUsername();
         User user = userService.findByUserName(userName);
         if(!userService.hasJournalEntryWithId(user, entryId))
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -59,9 +55,8 @@ public class JournalEntryControllerV2 {
     }
 
     @PutMapping("{entryId}")
-    public ResponseEntity<JournalEntry> updateEntryById(@PathVariable ObjectId entryId, @RequestBody JournalEntry entry) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
+    public ResponseEntity<JournalEntry> updateEntryById(@AuthenticationPrincipal UserDetails userDetails , @PathVariable ObjectId entryId, @RequestBody JournalEntry entry) {
+        String userName = userDetails.getUsername();
         User user = userService.findByUserName(userName);
         if(!userService.hasJournalEntryWithId(user, entryId)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -71,9 +66,8 @@ public class JournalEntryControllerV2 {
     }
 
     @PostMapping
-    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry entry) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
+    public ResponseEntity<JournalEntry> createEntry(@AuthenticationPrincipal UserDetails userDetails ,@RequestBody JournalEntry entry) {
+        String userName = userDetails.getUsername();
         User user = userService.findByUserName(userName);
         JournalEntry createdJournalEntry = journalEntryService.saveEntry(user, entry);
         return new ResponseEntity<>(createdJournalEntry, HttpStatus.CREATED);
