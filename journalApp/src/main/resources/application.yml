@@ -1,0 +1,38 @@
+# Common properties shared by all profiles
+spring:
+  profiles:
+    active: dev
+
+---
+# --- Development Profile ---
+spring:
+  config:
+    activate:
+      on-profile: dev
+server:
+  port: 8080
+  data:
+    mongodb:
+      uri: ${MONGO_DB_URI_DEV}
+      database: journaldb_dev
+      auto-index-creation: true
+logging:
+  level:
+    com.myjournal.journalApp: DEBUG
+
+---
+# --- Production Profile ---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  data:
+    mongodb:
+      uri: ${MONGO_DB_URI_PROD}
+      database: journaldb_prod
+      auto-index-creation: false # Disable in production
+server:
+  port: 9090
+logging:
+  level:
+    com.myjournal.journalApp: INFO # Use INFO level in production
