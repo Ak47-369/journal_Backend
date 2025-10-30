@@ -6,14 +6,15 @@ import com.myjournal.journalApp.entity.User;
 import com.myjournal.journalApp.enums.Roles;
 import com.myjournal.journalApp.exception.ResourceNotFoundException;
 import com.myjournal.journalApp.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final JournalEntryService journalEntryService;
@@ -44,6 +45,7 @@ public class UserService {
     public UserResponse createUser(CreateUserRequest createUserRequest) {
         // Check if username already exists
         userRepository.findByUserName(createUserRequest.getUserName()).ifPresent(user -> {
+            log.error("User with username '{}' already exists.", createUserRequest.getUserName());
             throw new IllegalStateException(String.format("User with username '%s' already exists.", createUserRequest.getUserName()));
         });
 
