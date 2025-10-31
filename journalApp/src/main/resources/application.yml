@@ -9,13 +9,13 @@ spring:
   config:
     activate:
       on-profile: dev
-server:
-  port: 8080
   data:
     mongodb:
       uri: ${MONGO_DB_URI_DEV}
-      database: journaldb_dev
+      database: journaldb
       auto-index-creation: true
+server:
+  port: 8080
 logging:
   level:
     com.myjournal.journalApp: DEBUG

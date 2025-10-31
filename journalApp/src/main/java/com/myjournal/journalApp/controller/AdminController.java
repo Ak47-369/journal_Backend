@@ -3,6 +3,7 @@ package com.myjournal.journalApp.controller;
 import com.myjournal.journalApp.dto.CreateUserRequest;
 import com.myjournal.journalApp.dto.UserResponse;
 import com.myjournal.journalApp.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
+@AllArgsConstructor
 public class AdminController {
     private final UserService userService;
-
-    public AdminController(UserService userService){
-        this.userService = userService;
-    }
 
     @GetMapping("/all-users")
     public ResponseEntity<List<UserResponse>> getAllUsers(){
