@@ -24,13 +24,15 @@ public class UserService {
     private final JournalEntryService journalEntryService;
     private final PasswordEncoder passwordEncoder;
     private final MongoTemplate mongoTemplate;
+    private final EmailService emailService;
 
     public UserService(UserRepository userRepository, JournalEntryService journalEntryService, PasswordEncoder passwordEncoder
-            , MongoTemplate mongoTemplate) {
+            , MongoTemplate mongoTemplate, EmailService emailService) {
         this.userRepository = userRepository;
         this.journalEntryService = journalEntryService;
         this.passwordEncoder = passwordEncoder;
         this.mongoTemplate = mongoTemplate;
+        this.emailService = emailService;
 
     }
 
@@ -57,8 +59,14 @@ public class UserService {
             throw new IllegalStateException(String.format("User with username '%s' already exists.", createUserRequest.getUserName()));
         });
 
-        User user = new User(createUserRequest.getUserName(), passwordEncoder.encode(createUserRequest.getPassword()));
+        User user = new User(createUserRequest.getUserName(), passwordEncoder.encode(createUserRequest.getPassword()),createUserRequest.getEmail());
         User savedUser = userRepository.save(user);
+        emailService.sendEmail(
+                user.getEmail(),
+                "Welcome to Journal App!",
+                "Hello " + createUserRequest.getUserName() + ",\n\nWelcome!!🎉🎉"
+
+        );
         return new UserResponse(savedUser.getId(), savedUser.getUserName());
     }
 
@@ -67,7 +75,7 @@ public class UserService {
             throw new IllegalStateException(String.format("User with username '%s' already exists.", createUserRequest.getUserName()));
         });
 
-        User user = new User(createUserRequest.getUserName(), passwordEncoder.encode(createUserRequest.getPassword()));
+        User user = new User(createUserRequest.getUserName(), passwordEncoder.encode(createUserRequest.getPassword()),createUserRequest.getEmail());
         if (createUserRequest.getRole() != null && !createUserRequest.getRole().isEmpty()) {
             user.getRoles().add(Roles.valueOf(createUserRequest.getRole()));
         }

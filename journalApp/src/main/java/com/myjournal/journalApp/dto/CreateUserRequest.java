@@ -1,5 +1,6 @@
 package com.myjournal.journalApp.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -16,4 +17,7 @@ public class CreateUserRequest {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
     private String role;
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid email format")
+    private String email;
 }
