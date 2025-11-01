@@ -2,6 +2,7 @@ package com.myjournal.journalApp.controller;
 
 import com.myjournal.journalApp.dto.CreateUserRequest;
 import com.myjournal.journalApp.dto.UserResponse;
+import com.myjournal.journalApp.entity.User;
 import com.myjournal.journalApp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,15 @@ public class AdminController {
         createUserRequest.setRole("ADMIN");
         UserResponse createdUser = userService.createAdminUser(createUserRequest);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/good-users")
+    public ResponseEntity<List<UserResponse>> findGoodUsers(){
+        List<UserResponse> goodUsers = userService.findGoodUsers();
+        if(goodUsers != null && !goodUsers.isEmpty()){
+            return new ResponseEntity<>(goodUsers, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

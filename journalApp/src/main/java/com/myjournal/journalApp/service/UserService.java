@@ -8,9 +8,13 @@ import com.myjournal.journalApp.exception.ResourceNotFoundException;
 import com.myjournal.journalApp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,11 +23,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final JournalEntryService journalEntryService;
     private final PasswordEncoder passwordEncoder;
+    private final MongoTemplate mongoTemplate;
 
-    public UserService(UserRepository userRepository, JournalEntryService journalEntryService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, JournalEntryService journalEntryService, PasswordEncoder passwordEncoder
+            , MongoTemplate mongoTemplate) {
         this.userRepository = userRepository;
         this.journalEntryService = journalEntryService;
         this.passwordEncoder = passwordEncoder;
+        this.mongoTemplate = mongoTemplate;
+
     }
 
     public List<UserResponse> findAllUsers() {
@@ -98,5 +106,26 @@ public class UserService {
 
     public ObjectId getUserIdByName(String userName){
         return userRepository.findByUserName(userName).orElseThrow( () -> new ResourceNotFoundException("User", "userName", userName)).getId();
+    }
+
+    /* Good User - Whose username starts with A(case-insenstive) and role = User only OR whose journalEntries are not empty*/
+    public List<UserResponse> findGoodUsers() {
+        Criteria usernameStartsWithA = Criteria.where("userName").regex("^A", "i");
+        Criteria roleIsOnlyUser = new Criteria().andOperator(
+                Criteria.where("roles").size(1),
+                Criteria.where("roles").is(Roles.USER)
+        );
+
+        Criteria hasJournalEntries = Criteria.where("journalEntryIds").exists(true).ne(new ArrayList<>());
+        Criteria userIsGoodByNameAndRole = new Criteria().andOperator(usernameStartsWithA, roleIsOnlyUser);
+        // Now, create the final query: (A AND B) OR C
+        Criteria mainCriteria = new Criteria().orOperator(userIsGoodByNameAndRole, hasJournalEntries);
+        Query query = new Query(mainCriteria);
+
+        log.info("Executing dynamic query for good users: {}", query); // Good Practice to log the query
+        List<User> users = mongoTemplate.find(query, User.class);
+        return users.stream()
+                .map(user -> new UserResponse(user.getId(), user.getUserName()))
+                .toList();
     }
 }
