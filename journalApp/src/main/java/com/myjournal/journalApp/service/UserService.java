@@ -64,9 +64,9 @@ public class UserService {
         emailService.sendEmail(
                 user.getEmail(),
                 "Welcome to Journal App!",
-                "Hello " + createUserRequest.getUserName() + ",\n\nWelcome!!🎉🎉"
+                "Hello " + createUserRequest.getUserName() + ",\n\nWelcome!!🎉🎉",
 
-        );
+                "user:" + user.getId());
         return new UserResponse(savedUser.getId(), savedUser.getUserName());
     }
 

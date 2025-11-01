@@ -29,6 +29,7 @@ public class User {
     private String email;
     private List<ObjectId> journalEntryIds = new ArrayList<>();
     @NotBlank(message = "Password can't be blank")
+    private int monthlyQuotaUsed = 0;
     @Size(min = 4, message = "Password must be at least 4 characters long")
     private String password;
     private List<Roles> roles = new ArrayList<>(); // Initialize to avoid NullPointerException

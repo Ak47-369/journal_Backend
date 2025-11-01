@@ -15,12 +15,12 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmail(String to, String subject, String body) {
+    public void sendEmail(String to, String subject, String body, String s) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-        log.info("Sending email...")
+        log.info("Sending email...");
         try{
             mailSender.send(message);
             log.info("Email sent!");

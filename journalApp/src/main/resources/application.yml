@@ -9,6 +9,13 @@ spring:
 weather:
   api:
     url: "http://api.weatherstack.com/current"
+app:
+  jobs:
+    quota-report-cron: ${QUOTA_REPORT_CRON}
+    quota-reset-cron: ${QUOTA_RESET_CRON}
+  quota:
+    max: ${QUOTA_MAX}
+
 ---
 # --- Development Profile ---
 spring:
