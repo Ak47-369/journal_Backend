@@ -1,10 +1,10 @@
 package com.myjournal.journalApp.service;
 
+import com.myjournal.journalApp.configuration.WeatherApiConfig;
 import com.myjournal.journalApp.dto.weather.WeatherResponse;
 import com.myjournal.journalApp.exception.WeatherServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -13,24 +13,20 @@ import org.springframework.web.client.RestClientException;
 @Service
 @Slf4j
 public class WeatherService {
-    private final RestClient weatherApiClient;
+    private final RestClient restClient;
+    private final WeatherApiConfig weatherApiConfig;
 
-    @Value("${weather.api.url}")
-    private String apiUrl;
 
-    @Value("${weather.api.key}")
-    private String apiKey;
-
-    // Use @Qualifier to specify which bean to inject
-    public WeatherService(@Qualifier("weatherApiClient") RestClient weatherApiClient) {
-        this.weatherApiClient = weatherApiClient;
+    public WeatherService(@Qualifier("weatherApiClient") RestClient restClient, WeatherApiConfig weatherApiConfig) {
+        this.restClient = restClient;
+        this.weatherApiConfig = weatherApiConfig;
     }
 
     public WeatherResponse getWeather(String city) {
         try {
-            return weatherApiClient.get()
-                    .uri(apiUrl, uriBuilder -> uriBuilder
-                            .queryParam("access_key", apiKey)
+            return restClient.get()
+                    .uri(weatherApiConfig.getUrl(), uriBuilder -> uriBuilder
+                            .queryParam("access_key", weatherApiConfig.getKey())
                             .queryParam("query", city)
                             .build())
                     .retrieve()
