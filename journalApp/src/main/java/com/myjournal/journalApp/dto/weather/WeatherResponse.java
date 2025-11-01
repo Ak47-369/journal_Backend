@@ -6,7 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true) // To Do - Global Configuration
 // During Deserialization(JSON to POJO), if some json field not present in POJO, ignore it
 public class WeatherResponse {
 

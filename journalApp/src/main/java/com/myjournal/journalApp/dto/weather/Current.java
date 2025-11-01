@@ -7,7 +7,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Current {
     private int temperature;
     @JsonProperty("weather_descriptions")

@@ -2,6 +2,9 @@
 spring:
   profiles:
     active: dev
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
 
 weather:
   api:
