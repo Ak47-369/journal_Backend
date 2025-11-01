@@ -2,7 +2,9 @@ package com.myjournal.journalApp.controller;
 
 import com.myjournal.journalApp.dto.CreateUserRequest;
 import com.myjournal.journalApp.dto.UserResponse;
+import com.myjournal.journalApp.dto.weather.WeatherResponse;
 import com.myjournal.journalApp.service.UserService;
+import com.myjournal.journalApp.service.WeatherService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final WeatherService weatherService;
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
@@ -43,5 +46,11 @@ public class UserController {
         String userName = userDetails.getUsername();
         userService.deleteUserById(userService.getUserIdByName(userName));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/weather/{city}")
+    public ResponseEntity<?> greeting(@PathVariable String city,@AuthenticationPrincipal UserDetails userDetails){
+        WeatherResponse weatherResponse = weatherService.getWeather(city);
+        return new ResponseEntity<>("Hi " + userDetails.getUsername() + weatherResponse.getCurrent().toString(), HttpStatus.OK);
     }
 }

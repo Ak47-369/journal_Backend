@@ -46,6 +46,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST); // 400 Bad Request
     }
 
+    @ExceptionHandler(WeatherServiceException.class)
+    public ResponseEntity<ErrorResponse> handleWeatherServiceException(WeatherServiceException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                ex.getMessage(), // The message we created in the service
+                request.getDescription(false)
+        );
+        // Use 503 Service Unavailable
+        return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(

@@ -3,6 +3,9 @@ spring:
   profiles:
     active: dev
 
+weather:
+  api:
+    url: "http://api.weatherstack.com/current"
 ---
 # --- Development Profile ---
 spring:
@@ -19,6 +22,9 @@ server:
 logging:
   level:
     com.myjournal.journalApp: DEBUG
+weather:
+  api:
+    key: ${WEATHER_API_KEY_DEV}
 
 ---
 # --- Production Profile ---
@@ -36,3 +42,6 @@ server:
 logging:
   level:
     com.myjournal.journalApp: INFO # Use INFO level in production
+weather:
+  api:
+    key: ${WEATHER_API_KEY_PROD}
