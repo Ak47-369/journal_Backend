@@ -13,7 +13,7 @@ spring:
   data:
     redis:
       host: ${REDIS_HOST}
-      port: 6739
+      port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
     ssl:
       enabled: false

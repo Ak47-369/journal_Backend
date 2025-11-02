@@ -1,12 +1,10 @@
 package com.myjournal.journalApp.configuration;
 
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -19,7 +17,7 @@ import java.util.Map;
 
 @Configuration
 @EnableCaching // This enables Spring's annotation-driven cache management
-public class CacheConfig {
+public class RedisConfig {
 
     // Serializer for String key
     private final StringRedisSerializer keySerializer = new StringRedisSerializer();

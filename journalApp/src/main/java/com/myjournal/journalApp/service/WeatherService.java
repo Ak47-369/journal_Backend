@@ -10,21 +10,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @Slf4j
 public class WeatherService {
     private final RestClient restClient;
     private final WeatherApiConfig weatherApiConfig;
+    private final RedisService redisService;
 
 
-    public WeatherService(@Qualifier("weatherApiClient") RestClient restClient, WeatherApiConfig weatherApiConfig) {
+    public WeatherService(@Qualifier("weatherApiClient") RestClient restClient, WeatherApiConfig weatherApiConfig, RedisService redisService) {
         this.restClient = restClient;
         this.weatherApiConfig = weatherApiConfig;
+        this.redisService = redisService;
     }
 
     public WeatherResponse getWeather(String city) {
         try {
-            return restClient.get()
+            WeatherResponse weatherResponse = redisService.get(city, WeatherResponse.class);
+            if(weatherResponse != null)
+                return weatherResponse;
+            redisService.get(city, WeatherResponse.class);
+            log.info("Cache Miss!, Fetching weather for city: {} from External API", city);
+            weatherResponse = restClient.get()
                     .uri(weatherApiConfig.getUrl(), uriBuilder -> uriBuilder
                             .queryParam("access_key", weatherApiConfig.getKey())
                             .queryParam("query", city)
@@ -36,6 +45,8 @@ public class WeatherService {
                         throw new WeatherServiceException("Client error from weather service: " + errorBody, null);
                     })
                     .body(WeatherResponse.class);
+            redisService.set(city, weatherResponse, 10, TimeUnit.MINUTES);
+            return weatherResponse;
         } catch (RestClientException e) {
             log.error("RestClient Error: {}", e.getMessage());
             throw new WeatherServiceException("Error communicating with weather API", e);
