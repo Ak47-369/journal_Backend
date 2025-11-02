@@ -5,6 +5,18 @@ spring:
   jackson:
     deserialization:
       fail-on-unknown-properties: false
+  cache:
+    type: redis
+    redis:
+      time-to-live: 1m
+      key-prefix: "journal-app-cache::" # Use a specific prefix for all cache keys
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6739
+      password: ${REDIS_PASSWORD}
+    ssl:
+      enabled: false
 
 weather:
   api:

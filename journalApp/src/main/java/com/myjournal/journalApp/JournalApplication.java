@@ -2,6 +2,7 @@ package com.myjournal.journalApp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableAsync
+@EnableCaching
 @EnableScheduling
 @EnableMongoAuditing // Now everytime you save() and entity , createdAt and updatedAt fields populated automatically
 //@EnableTransactionManagement - Spring automatically setups it, after detecting spring-boot-starter-data-mongodb
