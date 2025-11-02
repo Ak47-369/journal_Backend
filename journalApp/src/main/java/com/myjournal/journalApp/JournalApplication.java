@@ -1,7 +1,11 @@
 package com.myjournal.journalApp;
 
+import com.myjournal.journalApp.configuration.CacheConfig;
+import com.myjournal.journalApp.configuration.WeatherApiConfig;
+import com.myjournal.journalApp.service.WeatherService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
@@ -16,6 +20,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAsync
 @EnableCaching
 @EnableScheduling
+@EnableConfigurationProperties({
+        WeatherApiConfig.class
+})
 @EnableMongoAuditing // Now everytime you save() and entity , createdAt and updatedAt fields populated automatically
 //@EnableTransactionManagement - Spring automatically setups it, after detecting spring-boot-starter-data-mongodb
 public class JournalApplication {
