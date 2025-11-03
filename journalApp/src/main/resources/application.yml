@@ -27,6 +27,10 @@ app:
     quota-reset-cron: ${QUOTA_RESET_CRON}
   quota:
     max: ${QUOTA_MAX}
+  rate-limiter:
+    key-prefix: "rate-limit::"
+    window-seconds: 60
+    max-requests: ${MAX_REQUESTS_ALLOWED}
 
 ---
 # --- Development Profile ---

@@ -3,6 +3,7 @@ package com.myjournal.journalApp.configuration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -73,6 +74,7 @@ public class RedisConfig {
      * as the "Automagic" @Cacheable cache.
      */
     @Bean
+    @Primary
     public RedisTemplate redisTemplate(RedisConnectionFactory connectionFactory){
         RedisTemplate<String,Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
@@ -81,6 +83,21 @@ public class RedisConfig {
         template.setValueSerializer(valueSerializer);
         template.setHashKeySerializer(keySerializer);
         template.setHashValueSerializer(valueSerializer);
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    /**
+     * This is a specialized RedisTemplate specifically for executing Lua scripts.
+     * It uses StringRedisSerializer for all its parts to ensure that keys and arguments
+     * are passed to the Lua script as plain strings, which is what Lua expects.
+     */
+    @Bean("scriptRedisTemplate")
+    public RedisTemplate<String, Long> scriptRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Long> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setDefaultSerializer(new StringRedisSerializer()); // Important for args
         template.afterPropertiesSet();
         return template;
     }

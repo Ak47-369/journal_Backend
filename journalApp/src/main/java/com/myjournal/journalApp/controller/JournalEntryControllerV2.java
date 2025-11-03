@@ -3,6 +3,7 @@ package com.myjournal.journalApp.controller;
 import com.myjournal.journalApp.dto.JournalEntry;
 import com.myjournal.journalApp.entity.User;
 import com.myjournal.journalApp.service.JournalEntryService;
+import com.myjournal.journalApp.service.RateLimiterService;
 import com.myjournal.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
@@ -18,16 +19,21 @@ import java.util.List;
 public class JournalEntryControllerV2 {
     private final UserService userService;
     private final JournalEntryService journalEntryService;
+    private final RateLimiterService rateLimiterService;
 
-    public JournalEntryControllerV2(JournalEntryService journalEntryService, UserService userService) {
+    public JournalEntryControllerV2(JournalEntryService journalEntryService, UserService userService,
+                                    RateLimiterService rateLimiterService) {
         this.journalEntryService = journalEntryService;
         this.userService = userService;
+        this.rateLimiterService = rateLimiterService;
     }
 
     @GetMapping
     public ResponseEntity<List<JournalEntry>> getAllEntries(@AuthenticationPrincipal UserDetails userDetails) {
         String userName = userDetails.getUsername();
         User user = userService.findByUserName(userName);
+        if(!rateLimiterService.isRequestAllowed(user.getId()))
+            return new ResponseEntity<>(HttpStatus.TOO_MANY_REQUESTS);
         List<JournalEntry> allEntries = journalEntryService.getAllEntries(user);
         return new ResponseEntity<>(allEntries, HttpStatus.OK); // Always return 200 OK, even for an empty list
     }
