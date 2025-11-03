@@ -31,7 +31,11 @@ app:
     key-prefix: "rate-limit::"
     window-seconds: 60
     max-requests: ${MAX_REQUESTS_ALLOWED}
-
+    token-bucket:
+      key-prefix: "${rate-limiter.key-prefix}token::"
+      capacity : ${MAX_REQUESTS_ALLOWED}
+      refill-rate: ${TOKENS_PER_SECOND} # A rate of 100/60, 1.66 add ~100 tokens per minute
+      tokens-per-request: ${TOKENS_PER_REQUEST} # tokens to consume per request
 ---
 # --- Development Profile ---
 spring:

@@ -11,7 +11,7 @@ public class RedisScriptConfig {
     @Bean
     public RedisScript<Long> rateLimiterScript(){
         DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
-        redisScript.setLocation(new ClassPathResource("scripts/rate-limiter.lua"));
+        redisScript.setLocation(new ClassPathResource("scripts/rate-limiter-token-bucket.lua"));
         redisScript.setResultType(Long.class);
         return redisScript;
     }

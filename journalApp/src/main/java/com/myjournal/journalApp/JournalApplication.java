@@ -1,6 +1,7 @@
 package com.myjournal.journalApp;
 
-import com.myjournal.journalApp.configuration.RateLimiterConfig;
+import com.myjournal.journalApp.configuration.RateLimiterSlidingWindowConfig;
+import com.myjournal.journalApp.configuration.RateLimiterTokenBucketConfig;
 import com.myjournal.journalApp.configuration.WeatherApiConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +17,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableConfigurationProperties({
         WeatherApiConfig.class,
-        RateLimiterConfig.class
+        RateLimiterSlidingWindowConfig.class,
+        RateLimiterTokenBucketConfig.class
 })
 @EnableMongoAuditing // Now everytime you save() and entity , createdAt and updatedAt fields populated automatically
 //@EnableTransactionManagement - Spring automatically setups it, after detecting spring-boot-starter-data-mongodb
