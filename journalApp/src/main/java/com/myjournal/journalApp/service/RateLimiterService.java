@@ -1,9 +1,8 @@
 package com.myjournal.journalApp.service;
 
 import com.myjournal.journalApp.configuration.RateLimiterConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
@@ -12,10 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
+@Slf4j
 public class RateLimiterService {
-
-    private static final Logger logger = LoggerFactory.getLogger(RateLimiterService.class);
-
     private final RedisTemplate<String, Long> scriptRedisTemplate;
     private final RedisScript<Long> rateLimiterScript;
     private final RateLimiterConfig rateLimiterConfig;
@@ -35,13 +32,14 @@ public class RateLimiterService {
             Long currentRequests = scriptRedisTemplate.execute(
                     rateLimiterScript,
                     Collections.singletonList(key),
+                    String.valueOf(rateLimiterConfig.getMaxRequests()),
                     String.valueOf(rateLimiterConfig.getWindowSeconds())
             );
-            logger.info("Rate limiter script executed. Current requests: {}", currentRequests);
-            return currentRequests != null && currentRequests <= rateLimiterConfig.getMaxRequests();
+            log.info("Rate limiter script executed. Current requests: {}", currentRequests);
+            return currentRequests != null && currentRequests < rateLimiterConfig.getMaxRequests();
         } catch (Exception e) {
-            logger.error("Error executing rate limiter script", e);
-            // Redis failure (fail open - allows request)
+            log.error("Error executing rate limiter script", e);
+            // Redis failure (As of now we will fail open - allows request)
             return true;
         }
     }
