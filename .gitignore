@@ -1,0 +1,38 @@
+
+# Compiled Java class files and artifacts
+target/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Visual Studio Code
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Any file ending in .log
+*.log
+# Log folders
+logs/
+
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+
+.mvn/
+.gradle/
+
+
+# Ignore your specific files
+Agents.md
+
+# Ignore any sensitive file
+.env
+*.env.local
