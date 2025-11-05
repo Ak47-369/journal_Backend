@@ -1,4 +1,4 @@
-package com.myjournal.journalApp.dto;
+package com.myjournal.journalApp.dto.usersDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateUserRequest {
-
+    // To Do - Separate DTO for UpdateUserRequest, can change any user,email,password
     @NotBlank(message = "Username cannot be blank")
     private String userName;
 

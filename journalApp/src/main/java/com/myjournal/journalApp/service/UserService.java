@@ -1,7 +1,7 @@
 package com.myjournal.journalApp.service;
 
-import com.myjournal.journalApp.dto.CreateUserRequest;
-import com.myjournal.journalApp.dto.UserResponse;
+import com.myjournal.journalApp.dto.usersDTO.CreateUserRequest;
+import com.myjournal.journalApp.dto.usersDTO.UserResponse;
 import com.myjournal.journalApp.entity.User;
 import com.myjournal.journalApp.enums.Roles;
 import com.myjournal.journalApp.exception.ResourceNotFoundException;
@@ -15,7 +15,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

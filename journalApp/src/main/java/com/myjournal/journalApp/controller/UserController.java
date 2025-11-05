@@ -1,8 +1,9 @@
 package com.myjournal.journalApp.controller;
 
-import com.myjournal.journalApp.dto.CreateUserRequest;
-import com.myjournal.journalApp.dto.UserResponse;
+import com.myjournal.journalApp.dto.usersDTO.CreateUserRequest;
+import com.myjournal.journalApp.dto.usersDTO.UserResponse;
 import com.myjournal.journalApp.dto.weather.WeatherResponse;
+import com.myjournal.journalApp.entity.User;
 import com.myjournal.journalApp.service.UserService;
 import com.myjournal.journalApp.service.WeatherService;
 import jakarta.validation.Valid;
@@ -20,12 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final WeatherService weatherService;
-
-    @PostMapping
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        UserResponse createdUser = userService.createUser(createUserRequest);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-    }
 
     @GetMapping
     public ResponseEntity<UserResponse> getUserById(@AuthenticationPrincipal UserDetails userDetails) {

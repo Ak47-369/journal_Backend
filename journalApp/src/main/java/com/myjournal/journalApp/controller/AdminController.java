@@ -1,8 +1,7 @@
 package com.myjournal.journalApp.controller;
 
-import com.myjournal.journalApp.dto.CreateUserRequest;
-import com.myjournal.journalApp.dto.UserResponse;
-import com.myjournal.journalApp.entity.User;
+import com.myjournal.journalApp.dto.usersDTO.CreateUserRequest;
+import com.myjournal.journalApp.dto.usersDTO.UserResponse;
 import com.myjournal.journalApp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
