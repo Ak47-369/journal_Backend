@@ -20,6 +20,7 @@ build/
 *.log
 # Log folders
 logs/
+.env
 
 # macOS
 .DS_Store
