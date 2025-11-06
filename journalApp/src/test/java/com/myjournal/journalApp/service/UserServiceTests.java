@@ -35,7 +35,7 @@ class UserServiceTests {
 
     @BeforeAll
     static void setUp(){
-        testUser = new User("ram", "hashed_password_from_db");
+        testUser = new User("ram", "hashed_password_from_db","email@gmail.com");
     }
 
     @Test

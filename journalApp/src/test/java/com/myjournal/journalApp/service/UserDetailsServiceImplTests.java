@@ -32,7 +32,7 @@ class UserDetailsServiceImplTests {
     @BeforeEach
     void setUp() {
         // Create a realistic User entity that the repository would return
-        testUser = new User("ram", "hashed_password_from_db");
+        testUser = new User("ram", "hashed_password_from_db","email@gmail.com");
     }
 
     @Test

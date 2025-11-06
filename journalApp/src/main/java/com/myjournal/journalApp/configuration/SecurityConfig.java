@@ -39,9 +39,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         // Rule 1 (MOST SPECIFIC): Allow public access for user registration.
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/public/**", "/health").permitAll()
+                        .requestMatchers("/public/**", "/actuator/health").permitAll()
                         // Rule 5 (ADMIN): Secure admin endpoints.
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
 
                         // Rule 6 (CATCH-ALL): Any other request not specified above must be authenticated.
                         .anyRequest().authenticated()

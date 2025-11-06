@@ -17,6 +17,9 @@ spring:
       password: ${REDIS_PASSWORD}
     ssl:
       enabled: false
+  security:
+    filter:
+      dispatcher-types: REQUEST, ASYNC, ERROR
 
 weather:
   api:
@@ -39,6 +42,13 @@ app:
       capacity : ${MAX_REQUESTS_ALLOWED}
       refill-rate: ${TOKENS_PER_SECOND} # A rate of 100/60, 1.66 add ~100 tokens per minute
       tokens-per-request: ${TOKENS_PER_REQUEST} # tokens to consume per request
+management:
+  server:
+    port: 9091
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics,
 ---
 # --- Development Profile ---
 spring:
