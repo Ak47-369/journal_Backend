@@ -2,7 +2,8 @@
 # This stage uses a full JDK to build our app
 FROM eclipse-temurin:17-jdk-jammy as builder
 WORKDIR /workspace
-COPY . .
+COPY journalApp .
+RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests
 
 # --- Stage 2: The "Run" Stage ---
