@@ -1,39 +1,39 @@
-
-# Compiled Java class files and artifacts
+HELP.md
+AGENTS.md
 target/
-build/
-
-# IntelliJ IDEA
-.idea/
-*.iml
-*.iws
-
-# Visual Studio Code
-.vscode/
-
-# Eclipse
-.classpath
-.project
-.settings/
-
-# Any file ending in .log
-*.log
-# Log folders
 logs/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.yml
+.log
 .env
+*.env
 
-# macOS
-.DS_Store
-# Windows
-Thumbs.db
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
 
-.mvn/
-.gradle/
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-
-# Ignore your specific files
-Agents.md
-
-# Ignore any sensitive file
-.env
-*.env.local
+### VS Code ###
+.vscode/
