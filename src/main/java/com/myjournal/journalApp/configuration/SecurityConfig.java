@@ -1,6 +1,7 @@
 package com.myjournal.journalApp.configuration;
 
 import com.myjournal.journalApp.configuration.filter.JwtAuthFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,18 +15,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final JwtAuthFilter JwtAuthFilter;
-    private static final String[] SWAGGER_PATHS = {
-            "/v3/api-docs/**",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/webjars/swagger-ui/**" // Add this for Swagger UI's static assets
-    };
+    private final JwtAuthFilter jwtAuthFilter;
+    @Value("${management.endpoints.web.exposure.include:health}")
+    private String[] exposedActuatorEndpoints;
+
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
-        JwtAuthFilter = jwtAuthFilter;
+        this.jwtAuthFilter = jwtAuthFilter;
     }
 
     @Bean
@@ -40,20 +41,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        List<String> publicUrls = new ArrayList<>();
+        // Add static public URLs
+        publicUrls.add("/api/v1/auth/**");
+        publicUrls.add("/public/**");
+        publicUrls.add("/api-docs/**");
+
+        // Add the dynamically loaded actuator endpoints
+        if (exposedActuatorEndpoints != null) {
+            for (String endpoint : exposedActuatorEndpoints) {
+                if (endpoint.equals("*")) {
+                    // Expose all actuator endpoints
+                    publicUrls.add("/actuator/**");
+                    break; // No need to add more
+                }
+                publicUrls.add("/actuator/" + endpoint);
+            }
+        }
+
         return http
-                .authorizeHttpRequests(request -> request
-                        // Rule 1 (MOST SPECIFIC): Allow public access for user registration.
-                        .requestMatchers("/api/v1/auth/**","/public/**", "/actuator/health").permitAll()
-                                .requestMatchers(SWAGGER_PATHS).permitAll()
-                        // Rule 5 (ADMIN): Secure admin endpoints.
-                        .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
-                                .anyRequest().permitAll()
-                )
-                // Configure session management to be Stateless
-                .sessionManagement(session -> session.sessionCreationPolicy((SessionCreationPolicy.STATELESS)))
-                // Add out Custom JWT filter before the standard authentication filter
-                .addFilterBefore(JwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request
+                        // Rule 1: Allow public access to our dynamically built list
+                        .requestMatchers(publicUrls.toArray(new String[0])).permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Rule 2 (CATCH-ALL): Any other request must be authenticated.
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
