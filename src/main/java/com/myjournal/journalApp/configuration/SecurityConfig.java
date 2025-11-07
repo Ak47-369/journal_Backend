@@ -4,6 +4,7 @@ import com.myjournal.journalApp.configuration.filter.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,6 +49,7 @@ public class SecurityConfig {
         publicUrls.add("/swagger-ui.html");
         publicUrls.add("/swagger-ui/**");
         publicUrls.add("/v3/api-docs/**");
+        publicUrls.add("/health-check/**");
 
         // Add the dynamically loaded actuator endpoints
         if (exposedActuatorEndpoints != null) {
@@ -65,6 +67,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         // Rule 1: Allow public access to our dynamically built list
+                        .requestMatchers(HttpMethod.POST,"api/v1/users").permitAll()
                         .requestMatchers(publicUrls.toArray(new String[0])).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         // Rule 2 (CATCH-ALL): Any other request must be authenticated.
