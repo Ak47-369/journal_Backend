@@ -18,7 +18,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtAuthFilter JwtAuthFilter;
-
+    private static final String[] SWAGGER_PATHS = {
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/webjars/swagger-ui/**" // Add this for Swagger UI's static assets
+    };
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
         JwtAuthFilter = jwtAuthFilter;
     }
@@ -38,13 +43,11 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(request -> request
                         // Rule 1 (MOST SPECIFIC): Allow public access for user registration.
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/public/**", "/actuator/health").permitAll()
+                        .requestMatchers("/api/v1/auth/**","/public/**", "/actuator/health").permitAll()
+                                .requestMatchers(SWAGGER_PATHS).permitAll()
                         // Rule 5 (ADMIN): Secure admin endpoints.
                         .requestMatchers("/admin/**", "/actuator/**").hasRole("ADMIN")
-
-                        // Rule 6 (CATCH-ALL): Any other request not specified above must be authenticated.
-                        .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 // Configure session management to be Stateless
                 .sessionManagement(session -> session.sessionCreationPolicy((SessionCreationPolicy.STATELESS)))
