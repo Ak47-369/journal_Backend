@@ -45,7 +45,9 @@ public class SecurityConfig {
         // Add static public URLs
         publicUrls.add("/api/v1/auth/**");
         publicUrls.add("/public/**");
-        publicUrls.add("/api-docs/**");
+        publicUrls.add("/swagger-ui.html");
+        publicUrls.add("/swagger-ui/**");
+        publicUrls.add("/v3/api-docs/**");
 
         // Add the dynamically loaded actuator endpoints
         if (exposedActuatorEndpoints != null) {
